@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "rede-api",
+  "private_key_id": "1030715c2ff8c4bcbae93c0d1156276b59d36413",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCpIbzxNOw610i8\nbGZ41nIKYwBz852Zxa3cXCAw17cQjb3QCcePseYzgy3PcOwhI1rmzHI6D74b0oaA\nDYK5IY5fdDTmq0sigroiRMzbcouVEbqHShDvcZzLh1CZxUWkv1B4RIRWmpUSWbte\nnWwL5iWEoquZaL1iSAP8BfHmWK/7ERTGNSBRaCe9wmTLVlzc50QmusO3VY9QaFeP\ndqJA6q5ZTnyFyv+uIp8O9eV+u6HQfc1aIkywme2LAIpwdnmXY/iWF+Bz6QD6ifZh\nJ1jWx49x7IhhvzfoP4KY33zx5kGhSsgQtO2WHIA/NcsxxWkMRxFAIwc2DjNFGjm9\nzF+baKmRAgMBAAECggEAUlMVwOLdyZZY1T5+cnsPb3bZFZeTMvJBum0tThjyBqC3\nr7fS52LUhmZnuf1hMpAfAxCo2RIomypSRapN4wcuYdASn+To4Zd4Oo36mSacQqcq\ngAfRTnuisn7fALpBN/vXk3LmZ7E+tnvu9BL0MKaJxJHZrQaKiHg9WEMch97Lag0O\ncT6lMT2gNUmCwFZ7b7kn9vcEZ71esq358MoYf7Wn3ma67t/Bgw5uZ+KDyVIWSy4m\nhmeig5tfseWeSfhDApjp/vSbKFFGttLQR2ZX05TJn3fP98TXOnbSzBP8hCEidiVh\nu7647/WngMTYWbpznNvsr6vNwOTNjlWxjDjT55sa8QKBgQDqHJP9VgYjVDP0JFrd\nNtFAaPJUuh5sjM9Ka0mTZZqxkHsqvQbeZBD8Nr3pE/MkNIcWkvNhcSFUo6755cJ8\nYlWFIellGGkNIeV86VulwqQVIoGXgUyCcZqfomDpTuNatNl7EatPDBr2cHDoyXwQ\ndnBCx9LWyYGx7V1EkY64hUDfdwKBgQC48eDmgYHpz1UsO07dbZ3l0qgEbRIaxUsz\n/hrQkU3O2TU297USZ4FdleyVwvrTuWVqDclg1mRAVCDNgOyS9uD1yDs9pziRtv00\n+u/BH4d+IMvrpdOQQ8fdpJ3GAFBOpT7O1T1DYoB3npVuYE2ayByk967wFuJ7eayW\nZbajQ1xRNwKBgQCghxwK2FO5IeHGBK+xhAcTzWJtKnn2IM96zfpTcZYTL2jlM1xk\nXeUvrDGogp90Mfh3SChOpo4eRWaTwDINrDfL5CbvxT8zXAzKDBFlpgNw4opN4sEd\nqNxHncYp9If9CIkf1EvNFhXe6dbiKFZDy5LKl85ArUebQ5FylQRyDh0fnQKBgDZS\nxc6vJ6u3vLrbSNT9h62j7LowF2tJnEdPUi0FISeq4Vid9c/MG1GT4gQzW12pTUKT\nfh01nAjRLTlvrw2T+ov3Hn+DiLg0WbegJaBCVJgVphA3iycK4cAWxEkOeog/PW2f\ncPlEC5wXNqlPHDxknxVNs1LORgQivzEF+1mFRa6NAoGBAJD4ShayjuzQfvytw12g\nG17VPr/CJyKXfTCnQIoa9WPFh5BW34oYGpQvcPWUC/Yej3nOL/P3LP5z0p/a6MBz\nc3T5EUrxDzv7x8Qb0gKCGLaqaaQQQSd0Ev18x7RR78FzLtY5WKPF3d3OVDBrjg9H\n+JlGWWInB1mzPumDZwtsRHvS\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-mw8gg@rede-api.iam.gserviceaccount.com",
+  "client_id": "116842627459912029208",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-mw8gg%40rede-api.iam.gserviceaccount.com"
+}
