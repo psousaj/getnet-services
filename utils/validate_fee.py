@@ -1,22 +1,31 @@
-import json    
-# from utils.fee import fee
-import fee
+import json
+import math    
+from utils.fee import fee
+# import fee
 
 
-# data = json.dumps(fee)
-data = json.dumps(fee.fee)
+data = json.dumps(fee)
+# data = json.dumps(fee.fee)
 data = json.loads(data)
 
-def validate(tax:float, bandeira, mod):
-    value = data[bandeira][mod]
-    if value == tax:
-        return True, mod
-    elif value >= (tax - 0.02) and value <= (tax+0.3):
-        return True, mod
-    else:
-        return False
-# print(data['visa'])
-print(validate(3.0900000000000034, 'VISA', 'CREDITO'))
+def validate(tax:float, bandeira):
+    brand = data[0][bandeira]
+    for value in brand:
+        for fee in value:
+            comparator = value[fee]
+            if math.isclose(tax, comparator, rel_tol=0.0, abs_tol=0.04):
+                return (True, fee)
+    return False
 
-# print(2.52 >= 2.49-0.02)
-# print(2.49-0.02)
+def expected_fee(tax, bandeira):
+    brand = data[0][bandeira]
+    for value in brand:
+        for fee in value:
+            comparator = value[fee]
+            if math.isclose(tax, comparator, rel_tol=0.0, abs_tol=0.09):
+                return comparator
+    return None      
+# print(validate(0.88, 'VISA'))
+# print(0.88 < 0.90)
+# print(1.9019019019019 < 1.9)
+

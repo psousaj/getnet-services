@@ -1,7 +1,11 @@
 from datetime import datetime
+import shutil
+import pandas as pd
 from utils.validate_fee import *
+from configs.validations import *
 from configs.logging_config import logger
 from connection.connectdb import Connect
+from configs.validations import save_excel
 
 class RelatorioPeriodo():
 
@@ -39,17 +43,45 @@ class RelatorioPeriodo():
 
     def cert_fee(self):
         df = self.df
+        error_list = []
+        desktop = find_desktop_path()
+        path = getPath(df.loc[0, 'cod_empresa'], self.date, "xlsx", complete=True, 
+                       create_if_not_exists=True, report_path=True, company=self.empresa,
+                       report_type="taxas")
+        colunas = ["cod_empresa", "DataVenda", "Valor", "TaxaMdr%", "TaxaEsperada%", "ValorMdr", "ValorLiquido", 
+                   "Modalidade", "Parcelas", "NSU", "NumeroVenda", "Cartao", "Empresa"]
+        error_df = pd.DataFrame(columns=colunas)
+
         for i, reg in enumerate(df['TaxaMdr']):
             bandeira_normal = df.loc[i, 'Bandeira']
             bandeira = bandeira_normal
-            mod = df.loc[i, 'Modalidade']
             bandeira = bandeira.replace(" CRÉDITO", "")
             bandeira = bandeira.replace(" DÉBITO", "")
-            bandeira = str(bandeira)
-            palavras = mod.split()
-            indice = palavras.index("CREDITO") if palavras.__contains__("CREDITO") else palavras.index("DEBITO")
-            mod = ' '.join(palavras[:indice+1])
 
-            print(reg, bandeira_normal, validate(reg, bandeira, mod))
+            isvalid = validate(reg, bandeira)
+            logger.info(f"{reg} {bandeira_normal} - {isvalid}")
 
+            if not isvalid:
+                df['DataVenda'] = pd.to_datetime(df['DataVenda'], format="%d/%m/%Y %H:%M")
+                df['DataVenda'] = df['DataVenda'].dt.strftime("%d/%m/%Y %H:%M")
+                # error_list.append(df.iloc[i].tolist())
+                error = df.iloc[i].tolist()
+
+        # for i, item in enumerate(error_list):
+                error_df.loc[i, 'cod_empresa'] = error[0]
+                error_df.loc[i, 'DataVenda'] = error[1]
+                error_df.loc[i, 'Valor'] = error[2]
+                error_df.loc[i, 'TaxaMdr%'] = error[3]
+                error_df.loc[i, 'TaxaEsperada%'] = expected_fee(reg, bandeira)
+                error_df.loc[i, 'ValorMdr'] = error[4]
+                error_df.loc[i, 'ValorLiquido'] = error[5]
+                error_df.loc[i, 'Modalidade'] = error[6]
+                error_df.loc[i, 'Parcelas'] = error[7]
+                error_df.loc[i, 'NSU'] = error[8]
+                error_df.loc[i, 'NumeroVenda'] = error[9]
+                error_df.loc[i, 'Cartao'] = error[10]
+                error_df.loc[i, 'Empresa'] = error[11]
+        print(error_df.head())
+
+        save_excel(error_df, path, desktop)
 # update public.companies set cod_maquinetas = ('{"getnet":"6816197"}') where cnpj = '32868578000150';

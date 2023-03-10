@@ -1,5 +1,5 @@
-fee = {'VISA':{'CREDITO':1.79, 'at_3x':2.95, 'at_6x':2.95, 'at_9x':2.95, 'at_12x':2.95, 'DEBITO':0.90},
-       'MASTERCARD':{'CREDITO':1.79, 'at_3x':2.95, 'at_6x':2.95, 'at_9x':2.95, 'at_12x':2.95, 'DEBITO':0.90},
-       'ELO':{'CREDITO':2.29, 'at_3x':3.45, 'at_6x':3.45, 'at_9x':3.45, 'at_12x':3.45, 'DEBITO':1.40},
-       'AMEX':{'CREDITO':4.11, 'at_3x':4.81, 'at_6x':4.81, 'at_9x':5.90, 'at_12x':5.90},
-       'HIPERCARD':{'CREDITO':2.49, 'at_3x':3.65, 'at_6x':3.65, 'at_9x':3.65, 'at_12x':3.65},}
+fee = {'VISA':[{'CREDITO_ALUG':1.79, '3x_ALUG':2.95, '6x_ALUG':2.95, '9x_ALUG':2.95, '12x_ALUG':2.95, 'DEBITO_ALUG':0.90}, {'CREDITO':3.09, '3x':6.40, '6x':6.40, '9x':6.40, '12x':6.40, 'DEBITO':1.95}],
+       'MASTERCARD':[{'CREDITO_ALUG':1.79, '3x_ALUG':2.95, '6x_ALUG':2.95, '9x_ALUG':2.95, '12x_ALUG':2.95, 'DEBITO_ALUG':0.90}, {'CREDITO':3.09, '3x':6.40, '6x':6.40, '9x':6.40, '12x':6.40, 'DEBITO':1.95}],
+       'ELO':[{'CREDITO_ALUG':2.29, '3x_ALUG':3.45, '6x_ALUG':3.45, '9x_ALUG':3.45, '12x_ALUG':3.45, 'DEBITO_ALUG':1.40}, {'CREDITO':3.09, '3x':6.40, '6x':6.40, '9x':6.40, '12x':6.40, 'DEBITO':1.95}],
+       'AMEX':[{'CREDITO_ALUG':4.11, '3x_ALUG':4.81, '6x_ALUG':4.81, '9x_ALUG':5.90, '12x_ALUG':5.90}, {'CREDITO':3.09, '3x':6.40, '6x':6.40, '9x':6.40, '12x':6.40}],
+       'HIPERCARD':[{'CREDITO_ALUG':2.49, '3x_ALUG':3.65, '6x_ALUG':3.65, '9x_ALUG':3.65, '12x_ALUG':3.65}, {'CREDITO':3.09, '3x':6.40, '6x':6.40, '9x':6.40, '12x':6.40}]},

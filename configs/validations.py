@@ -1,15 +1,18 @@
+from openpyxl.styles import Font, PatternFill, Border, Side, Alignment
 import os
+import shutil
 import sys
 import json
 import datetime
 from datetime import datetime as dt
 import time
-
+import pandas as pd
 import requests
 from configs.logging_config import logger
 
 
-def replace_string(date:datetime, extension, access_path=False, code=0):
+def replace_string(date:datetime, extension, access_path=False, code=0,
+                   report_path=False, report_type=None):
     """Informa o final do arquivo (replace removido na verificação se o diretório existe)
 
     Args:
@@ -23,6 +26,8 @@ def replace_string(date:datetime, extension, access_path=False, code=0):
     """
     if access_path:
         return r'token-{}.{}'.format(code, extension)
+    if report_path:
+        return r'{}-report-{}.{}'.format(report_type, date.strftime("%B"), extension)
     
     return r'relatorio-rede-{}.{}'.format(date.strftime("%B"), extension)
 
@@ -60,7 +65,9 @@ def path_exists(path_and_replace):
     
     return path
 
-def getPath(code:int, date:datetime, extension:str, complete=False, access_path=False, create_if_not_exists=False) -> str:
+def getPath(code:int, date:datetime.datetime, extension:str, 
+            complete=False, access_path=False, create_if_not_exists=False,
+            report_path=False, company:str=None, report_type:str=None) -> str:
         """
         Gera o path_file do arquivo solicitado, e retorna uma tupla ou uma string 
         dependendo do parâmetro complete. Caso o complete seja False, retornará uma tupla (path, replace)
@@ -79,16 +86,20 @@ def getPath(code:int, date:datetime, extension:str, complete=False, access_path=
             - { str } -> path
         """
         path = os.getcwd()
-        if not access_path:
-            path += r'\connection\files\{}\{}\relatorio-rede-{}.{}'.format(code,
+        if not access_path and not report_path:
+            path += r'\connection\files\{}\{}\relatorio-getnet-{}.{}'.format(code,
                                                                         date.year,
                                                                         date.strftime("%B"),
                                                                         extension)
             replace = replace_string(date, extension)
             path = path.replace(replace, "")
-        else:
+        elif access_path:
             path += r'\connection\access\company-tokens\token-{}.{}'.format(code, extension)
             replace = replace_string(date, extension, access_path=True, code=code)
+            path = path.replace(replace, "")
+        else:
+            path += r'\relatorio\error_reports\{}\{}-report-{}.{}'.format(company, report_type, date.strftime("%B"), extension)
+            replace = replace_string(date, extension, report_path=True, report_type=report_type)
             path = path.replace(replace, "")
 
         path = isUnix(path)
@@ -189,6 +200,37 @@ def find_desktop_path():
     if os.name == "posix":
        return os.path.join(os.environ['HOME'], 'Área de Trabalho')
     return os.path.join(os.environ['USERPROFILE'], 'Desktop')   
+
+def save_excel(df:pd.DataFrame, path:str, desktop:str):
+        while True:
+            try:
+                estilo = {'font': Font(name='Arial', size=14, bold=True, color='FFFFFF'),
+                            'fill': PatternFill(fill_type='solid', start_color='0FCF5F', end_color='FFFFFF'),
+                            'border': Border(left=Side(border_style='thin', color='000000'),
+                            right=Side(border_style='thin', color='000000'),
+                            top=Side(border_style='thin', color='000000'),
+                            bottom=Side(border_style='thin', color='000000')),
+                            'alignment': Alignment(horizontal='center', vertical='center')}
+
+                writer = pd.ExcelWriter(path, engine='openpyxl')
+                df.to_excel(writer, index=False)
+                workbook = writer.book
+                worksheet = writer.sheets['Sheet1']
+                for col_num, value in enumerate(df.columns.values):
+                    worksheet.cell(1, col_num+1).value = value
+                    for key in estilo:
+                        setattr(worksheet.cell(1, col_num+1), key, estilo[key])
+                workbook.save(path)
+
+                # df.to_excel(path, index=False)
+                shutil.copy(path, desktop)
+                logger.info("Succesfully saved and copy to desktop")
+                break
+            except PermissionError:
+                logger.warning("Erro de Permissão de escrita")
+                logger.warning("Por favor feche o arquivo aberto ou veja com o adm do sistema")
+                logger.warning(f"Arquivo: {path}")
+                time.sleep(5)
 
 def init_liberation():
     """

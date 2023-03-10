@@ -1,9 +1,8 @@
 import io
 import json
-import time
-import shutil
 import datetime
 import pandas as pd
+from configs.validations import save_excel
 from configs.validations import *
 from connection.connectdb import Connect
 from configs.logging_config import logger
@@ -75,20 +74,11 @@ class SumarioVendas:
         df = df.sort_values(by='Data da Venda')
         df.loc[0, 'Soma Venda Bruto'] = df['Valor Bruto'].sum()
 
-        self.__save_file(df, path, desktop)
+        save_excel(df, path, desktop)
 
         logger.debug("---" * 20)
         logger.info(f"Relatório de vendas salvo com sucesso em:\n{path}")
 
 
-    def __save_file(self, df:pd.DataFrame, path:str, desktop:str):
-        while True:
-            try:
-                df.to_excel(path, index=False)
-                shutil.copy(path, desktop)
-                break
-            except PermissionError:
-                logger.warning("Erro de Permissão de escrita")
-                logger.warning("Por favor feche o arquivo aberto ou veja permissões com o adm do sistema")
-                time.sleep(5)
+    
 
