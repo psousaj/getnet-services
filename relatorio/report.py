@@ -43,7 +43,6 @@ class RelatorioPeriodo():
 
     def cert_fee(self):
         df = self.df
-        error_list = []
         desktop = find_desktop_path()
         path = getPath(df.loc[0, 'cod_empresa'], self.date, "xlsx", complete=True, 
                        create_if_not_exists=True, report_path=True, company=self.empresa,
@@ -84,4 +83,39 @@ class RelatorioPeriodo():
         print(error_df.head())
 
         save_excel(error_df, path, desktop)
+        return self
+
+    def loc_sales_receives(self):
+        desktop = find_desktop_path()
+        path = getPath(self.empresa, self.date, "xlsx", complete=True, 
+                       create_if_not_exists=True, report_path=True, company=self.empresa,
+                       report_type="recebimentos-vendas")
+        db = self.DB
+        sql = '''
+        SELECT vendas."NSU", vendas."DataVenda", COALESCE(getnet.recebiveis."DataRecebimento") AS "DataRecebimento", "Valor", vendas."TaxaMdr", vendas."ValorMdr", vendas."ValorLiquido", vendas."Modalidade", vendas."Empresa" 
+        FROM getnet.vendas
+		LEFT JOIN getnet.recebiveis ON vendas."NSU" = recebiveis."NSU"
+        WHERE getnet.recebiveis."NSU" IS NOT NULL;
+        '''
+        df = db.get_db(sql)
+        print(df.head())
+        print(df.info())
+        save_excel(df, path, desktop)
+
+    def loc_sales_without_receives(self):
+        desktop = find_desktop_path()
+        path = getPath(self.empresa, self.date, "xlsx", complete=True, 
+                       create_if_not_exists=True, report_path=True, company=self.empresa,
+                       report_type="vendas-sem-recebimentos")
+        db = self.DB
+        sql = '''
+        SELECT vendas."NSU", vendas."DataVenda", COALESCE(getnet.recebiveis."DataRecebimento") AS "DataRecebimento", "Valor", vendas."TaxaMdr", vendas."ValorMdr", vendas."ValorLiquido", vendas."Modalidade", vendas."Empresa" 
+        FROM getnet.vendas
+		LEFT JOIN getnet.recebiveis ON vendas."NSU" = recebiveis."NSU"
+        WHERE getnet.recebiveis."NSU" IS NULL;
+        '''
+        df = db.get_db(sql)
+        print(df.head())
+        print(df.info())
+        save_excel(df, path, desktop)
 # update public.companies set cod_maquinetas = ('{"getnet":"6816197"}') where cnpj = '32868578000150';

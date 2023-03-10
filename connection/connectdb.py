@@ -1,3 +1,4 @@
+import traceback
 import psycopg2
 import pandas as pd
 import warnings
@@ -18,7 +19,7 @@ class Connect:
         warnings.simplefilter("ignore", UserWarning)
         logger.info(f"Conexão com {database} em: {host}")
 
-    def send(self, data):
+    def send(self, table:str, *args):
         """Envia os dados informados por parâmetro para o banco de dados
 
         Args:
@@ -26,20 +27,17 @@ class Connect:
         """        
         cur = self.cursor
         con = self.con
-        
-        data = json.loads(data)
-        for entry in data:
-            sql = """INSERT INTO getnet.vendas
-                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+        lista = tuple(list(*args))
 
-            try:
-                cur.execute(sql, (entry['cod_empresa'], entry['DataVenda'], entry['Valor'],
-                              entry['TaxaMdr'], entry['ValorMdr'], entry['ValorLiquido'],
-                              entry['Modalidade'], entry['Parcelas'], entry['Status'],
-                              entry['NSU'], entry['NumeroVenda'], entry['Cartao']))
+        placeholders = ", ".join(["%s"] * len(*args))
+        sql = f"INSERT INTO getnet.{table} VALUES ({placeholders})"
 
-                con.commit()
-            except Exception:
+        try:
+            logger.info(f"{lista}")
+            logger.debug("-"*10)
+            cur.execute(sql, lista) 
+            con.commit()
+        except Exception:
                 logger.info(f"Violação de Constraint, registro já salvo no banco de dados")
 
     def send_vendas(self, *args):
@@ -51,14 +49,13 @@ class Connect:
         sql = f"INSERT INTO getnet.vendas VALUES ({placeholders})"
 
         try:
-            logger.debug("-"*10)
-            logger.info(f"{sql}")
             logger.info(f"{lista}")
             logger.debug("-"*10)
             cur.execute(sql, lista) 
             con.commit()
         except Exception:
                 logger.info(f"Violação de Constraint, registro já salvo no banco de dados")
+                
 
     def get_db(self, sql):
         """Busca os registros referentes ao código do cliente e ao mês informado

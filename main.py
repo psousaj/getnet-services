@@ -31,6 +31,7 @@ locale.setlocale(locale.LC_ALL, 'pt_BR.utf8')
 
 #-- Consulta DB e faz o relatório do total de vendas mensal
 # RelatorioPeriodo(date).perform().show()
-RelatorioPeriodo(date).cert_fee()
+RelatorioPeriodo(date).cert_fee().loc_sales_without_receives()
+RelatorioPeriodo(date).cert_fee().loc_sales_receives()
 
 #------------------------------------------------------------------
