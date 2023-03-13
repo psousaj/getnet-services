@@ -6,6 +6,10 @@ from configs.validations import *
 from configs.logging_config import logger
 
 
+class EmptyDataFrameException(Exception):
+    def __init__(self, message):
+        self.message = message
+
 class Connect:
 
     def __init__(self):
@@ -33,10 +37,10 @@ class Connect:
         sql = f"INSERT INTO getnet.{table} VALUES ({placeholders})"
 
         try:
-            logger.info(f"{lista}")
-            logger.debug("-"*10)
             cur.execute(sql, lista) 
             con.commit()
+            logger.info(f"{lista}")
+            logger.debug("-"*20)
         except Exception:
                 logger.info(f"Violação de Constraint, registro já salvo no banco de dados")
 
@@ -49,15 +53,15 @@ class Connect:
         sql = f"INSERT INTO getnet.vendas VALUES ({placeholders})"
 
         try:
-            logger.info(f"{lista}")
-            logger.debug("-"*10)
             cur.execute(sql, lista) 
             con.commit()
+            logger.info(f"{lista}")
+            logger.debug("-"*10)
         except Exception:
                 logger.info(f"Violação de Constraint, registro já salvo no banco de dados")
                 
 
-    def get_db(self, sql):
+    def get_db(self, sql, type=None):
         """Busca os registros referentes ao código do cliente e ao mês informado
 
         Args:
@@ -67,11 +71,18 @@ class Connect:
            - {df.DataFrame}: Retorna um DataFrame Pandas
         """
         con = psycopg2.connect(host="192.168.1.54", user="postgres",
-                               password="1234", database='DataBaseTax')
+                            password="1234", database='DataBaseTax')
         df = pd.read_sql(f"{sql}", con=con)
+        
+        if df.size == 0 or df.size is None:
+                raise EmptyDataFrameException("Dataframe vazio, verifique a cláusula SQL")
         return df
+        
     
-    def execute(self, sql:str):
+    def execute(self, sql:str, list=False):
         cur = self.cursor
-
         cur.execute(sql)
+
+        if list:
+             return cur.fetchall()
+        return cur.fetchone()

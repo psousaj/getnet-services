@@ -26,10 +26,11 @@ def replace_string(date:datetime, extension, access_path=False, code=0,
     """
     if access_path:
         return r'token-{}.{}'.format(code, extension)
-    if report_path:
-        return r'{}-report-{}.{}'.format(report_type, date.strftime("%B"), extension)
     
-    return r'relatorio-rede-{}.{}'.format(date.strftime("%B"), extension)
+    if report_path:
+        return r'{}-report.{}'.format(report_type, extension)
+
+    return r'relatorio-getnet-{}.{}'.format(date.strftime("%B"), extension)
 
 def isUnix(path, **kwargs):
     """Gera um path modificado para cada s.o, aumentando a compatibilidade
@@ -67,7 +68,7 @@ def path_exists(path_and_replace):
 
 def getPath(code:int, date:datetime.datetime, extension:str, 
             complete=False, access_path=False, create_if_not_exists=False,
-            report_path=False, company:str=None, report_type:str=None) -> str:
+            report_path=False, company:str=None, report_type:str=None, retro=False) -> str:
         """
         Gera o path_file do arquivo solicitado, e retorna uma tupla ou uma string 
         dependendo do parâmetro complete. Caso o complete seja False, retornará uma tupla (path, replace)
@@ -86,6 +87,7 @@ def getPath(code:int, date:datetime.datetime, extension:str,
             - { str } -> path
         """
         path = os.getcwd()
+        month = date.strftime("%B")
         if not access_path and not report_path:
             path += r'\connection\files\{}\{}\relatorio-getnet-{}.{}'.format(code,
                                                                         date.year,
@@ -93,12 +95,17 @@ def getPath(code:int, date:datetime.datetime, extension:str,
                                                                         extension)
             replace = replace_string(date, extension)
             path = path.replace(replace, "")
-        elif access_path:
+
+        if access_path:
             path += r'\connection\access\company-tokens\token-{}.{}'.format(code, extension)
             replace = replace_string(date, extension, access_path=True, code=code)
             path = path.replace(replace, "")
+        if report_path and retro:
+            path += r'\relatorio\reports\{}\{}\{}-report.{}'.format(company, date.year, report_type, extension)
+            replace = replace_string(date, extension, report_path=True, report_type=report_type)
+            path = path.replace(replace, "")
         else:
-            path += r'\relatorio\error_reports\{}\{}-report-{}.{}'.format(company, report_type, date.strftime("%B"), extension)
+            path += r'\relatorio\reports\{}\{}\{}-{}\{}-report.{}'.format(company, date.year, date.month, month, report_type, extension)
             replace = replace_string(date, extension, report_path=True, report_type=report_type)
             path = path.replace(replace, "")
 
@@ -123,6 +130,9 @@ def get_config_path():
     # path = os.getcwd()
     # path += r'\configs\rede-credentials.json'
     return r"https://firebasestorage.googleapis.com/v0/b/rede-api.appspot.com/o/server%2Frede-credentials.json?alt=media&token=09f1992d-3aaf-41da-ad70-262c07481d2b"
+
+def get_report_path():
+    return isUnix(os.getcwd()+r'\relatorio\reports')
 
 def save_json(path, object):
     """Salva o json em local especificado por parâmetro
@@ -204,7 +214,7 @@ def find_desktop_path():
 def save_excel(df:pd.DataFrame, path:str, desktop:str):
         while True:
             try:
-                estilo = {'font': Font(name='Arial', size=14, bold=True, color='FFFFFF'),
+                estilo = {'font': Font(name='Arial', size=14, bold=False, color='FFFFFF'),
                             'fill': PatternFill(fill_type='solid', start_color='0FCF5F', end_color='FFFFFF'),
                             'border': Border(left=Side(border_style='thin', color='000000'),
                             right=Side(border_style='thin', color='000000'),
@@ -216,6 +226,7 @@ def save_excel(df:pd.DataFrame, path:str, desktop:str):
                 df.to_excel(writer, index=False)
                 workbook = writer.book
                 worksheet = writer.sheets['Sheet1']
+
                 for col_num, value in enumerate(df.columns.values):
                     worksheet.cell(1, col_num+1).value = value
                     for key in estilo:

@@ -15,10 +15,10 @@ parser.add_argument("--a", nargs='?')
 args = parser.parse_args()
 
 ##-- SET Initial Configs
-date = datetime(2023, 1, 1) if not args.code else datetime(args.m, args.a, 1)
+date = datetime(2022, 5, 1) if not args.code else datetime(args.a, args.m, 1)
 end_date = date.replace(day=calendar.monthrange(date.year, date.month )[1])
 end_date = datetime.now() if not end_date.day > datetime.now().day else end_date
-code = 13381369 if not args.code else args.code
+code = 6816197 if not args.code else args.code
 
 locale.setlocale(locale.LC_ALL, 'pt_BR.utf8')
 #-- Busca a API
@@ -30,8 +30,10 @@ locale.setlocale(locale.LC_ALL, 'pt_BR.utf8')
 # SumarioVendas(code, date).perform().export()
 
 #-- Consulta DB e faz o relatório do total de vendas mensal
-# RelatorioPeriodo(date).perform().show()
-RelatorioPeriodo(date).cert_fee().loc_sales_without_receives()
-RelatorioPeriodo(date).cert_fee().loc_sales_receives()
-
+(RelatorioPeriodo(code, date, retro=False)
+                    .cert_fee()
+                    .loc_sales_receives()
+                    .loc_sales_without_receives()
+                    .get_values()
+                    .show())
 #------------------------------------------------------------------

@@ -13,7 +13,7 @@ def validate(tax:float, bandeira):
     for value in brand:
         for fee in value:
             comparator = value[fee]
-            if math.isclose(tax, comparator, rel_tol=0.0, abs_tol=0.04):
+            if math.isclose(tax, comparator, rel_tol=0.00, abs_tol=0.05):
                 return (True, fee)
     return False
 
@@ -22,10 +22,11 @@ def expected_fee(tax, bandeira):
     for value in brand:
         for fee in value:
             comparator = value[fee]
-            if math.isclose(tax, comparator, rel_tol=0.0, abs_tol=0.09):
-                return comparator
-    return None      
-# print(validate(0.88, 'VISA'))
+            if math.isclose(tax, comparator, rel_tol=0.00, abs_tol=0.2):
+                return comparator, fee
+    return "Nenhuma taxa aproximada"      
+
+# print(validate(0.82, 'ELO'))
 # print(0.88 < 0.90)
 # print(1.9019019019019 < 1.9)
 
