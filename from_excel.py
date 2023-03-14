@@ -1,5 +1,6 @@
 import io
 import json
+import time
 import pandas as pd
 from connection.connectdb import Connect
 from configs.logging_config import logger
@@ -102,7 +103,6 @@ class save_from_excel():
         df['Empresa'] = self.empresa
         index = ["cod_empresa", "DataVenda", "DataRecebimento", "ValorOriginal", "ValorBruto", "ValorLiquido", 
                  "ValorMdr", "TaxaMdr", "Parcela", "TotalParcelas", "NSU", "NumeroVenda", "Modalidade", "Empresa"]
-        print(df.columns.size)
         new_names = ["cod_empresa", "DataRecebimento", "Modalidade", "Parcela", "TotalParcelas", "NSU", 
                      "NumeroVenda", "DataVenda", "ValorOriginal", "ValorBruto", "ValorMdr", "ValorLiquido", "TaxaMdr", "Empresa"]
 

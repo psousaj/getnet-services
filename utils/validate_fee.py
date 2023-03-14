@@ -17,7 +17,7 @@ def validate(tax:float, bandeira):
                 return (True, fee)
     return False
 
-def expected_fee(tax, bandeira):
+def expected_fee(tax:float, bandeira):
     brand = data[0][bandeira]
     for value in brand:
         for fee in value:
